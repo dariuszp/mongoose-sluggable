@@ -48,6 +48,13 @@ module.exports = exports = function sluggablePlugin(schema, options) {
             throw new Error('One of the fields is requried: ' + String(errorFields.join(', ')));
         }
 
+        if (!unique) {
+            this[slug] = value;
+            next();
+            return;
+        }
+
+        // TODO: unique
         this[slug] = value;
         next();
     });
