@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/dariuszp/mongoose-sluggable/issues"
   },
-  "homepage": "https://github.com/dariuszp/mongoose-sluggable"
+  "homepage": "https://github.com/dariuszp/mongoose-sluggable",
+  "devDependencies": {
+    "mocha": "1.*",
+    "should": "3.*"
+  }
 }
