@@ -1,6 +1,6 @@
 {
   "name": "mongoose-sluggable",
-  "version": "1.0.0",
+  "version": "0.6.0",
   "description": "Mongoose slug plugin",
   "main": "index.js",
   "scripts": {
@@ -19,5 +19,13 @@
   "bugs": {
     "url": "https://github.com/dariuszp/mongoose-sluggable/issues"
   },
-  "homepage": "https://github.com/dariuszp/mongoose-sluggable"
+  "homepage": "https://github.com/dariuszp/mongoose-sluggable",
+  "devDependencies": {
+    "mocha": "1.*",
+    "mongoose": "^4.1.5",
+    "should": "3.*"
+  },
+  "dependencies": {
+    "diacritics": "^1.2.2"
+  }
 }
