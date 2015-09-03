@@ -19,10 +19,11 @@ module.exports = exports = function sluggablePlugin(schema, options) {
     schema.pre('save', unique, function (next, done) {
         if (updatable === false && this[slug]) {
             next();
+            done();
             return;
         }
 
-        value = '',
+        var value = '',
         field = '',
         errorFields = [];
         if (typeof source === 'string') {
@@ -54,20 +55,19 @@ module.exports = exports = function sluggablePlugin(schema, options) {
             return;
         }
 
-        // TODO: unique
         var where = {},
             suffix = 1,
             self = this;
 
-        function findNewSlug(value) {
-            where[slug] = value;
-            self.findOne(where, undefined, function (err, data) {
+        function findNewSlug(search) {
+            where[slug] = search;
+            where['_id'] = { '$ne': self._id };
+            self.constructor.findOne(where, function (err, data) {
                 if (err) {
                     throw err;
                 }
-                console.log(data);
                 if (!data) {
-                    self[slug] = value;
+                    self[slug] = search;
                     done();
                     return;
                 }
