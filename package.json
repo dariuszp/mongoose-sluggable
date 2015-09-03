@@ -24,5 +24,8 @@
     "mocha": "1.*",
     "mongoose": "^4.1.5",
     "should": "3.*"
+  },
+  "dependencies": {
+    "diacritics": "^1.2.2"
   }
 }
