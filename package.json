@@ -22,6 +22,7 @@
   "homepage": "https://github.com/dariuszp/mongoose-sluggable",
   "devDependencies": {
     "mocha": "1.*",
+    "mongoose": "^4.1.5",
     "should": "3.*"
   }
 }
