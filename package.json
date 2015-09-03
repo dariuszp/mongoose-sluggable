@@ -1,0 +1,23 @@
+{
+  "name": "mongoose-sluggable",
+  "version": "1.0.0",
+  "description": "Mongoose slug plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dariuszp/mongoose-sluggable.git"
+  },
+  "keywords": [
+    "mongoose",
+    "slug"
+  ],
+  "author": "Półtorak Dariusz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dariuszp/mongoose-sluggable/issues"
+  },
+  "homepage": "https://github.com/dariuszp/mongoose-sluggable"
+}
