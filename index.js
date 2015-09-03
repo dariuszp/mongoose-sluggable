@@ -16,7 +16,7 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         separator = options.separator ? String(options.separator) : '-',
         updatable = ((options.separator) || (options.separator === undefined)) ? true : false;
 
-    schema.pre('save', function (next) {
+    schema.pre('save', unique, function (next, done) {
         if (updatable === false && this[field]) {
             next();
             return;
