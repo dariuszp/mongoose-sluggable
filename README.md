@@ -47,7 +47,18 @@ When using "unique: true", sluggable extension will not throw error or anything 
  - john-rambo
  - john-rambo-2
  - john-rambo-3
- ...etc...
+ - ...etc...
+
+ To check if slug is unique, plugin will make a query to database like this:
+ ````
+model.findOne({
+    field: 'current-slug'
+}, function (err, data) {
+    // logic
+});
+ ````
+
+ Where "field" is name of the field that is used to store slug (parameter from table above).
 
 **Important about separator!**
 When using separator that has multiple chracters and letters since I use regexp to trim slug and remove multiple separators that appear side by side.
