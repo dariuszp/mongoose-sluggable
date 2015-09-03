@@ -55,7 +55,23 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         }
 
         // TODO: unique
-        this[slug] = value;
-        next();
+        var where = {},
+            suffix = 1,
+            self = this;
+
+        function findNewSlug(value) {
+            where[slug] = value;
+            this.findOne(where, function (err, data) {
+                if (err) {
+                    throw err;
+                }
+                if (!data) {
+                    self[slug] = value;
+                    next();
+                    return;
+                }
+                findNewSlug(value + String(separator) + String(++suffix));
+            });
+        }
     });
 };
