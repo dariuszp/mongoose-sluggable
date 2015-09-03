@@ -14,10 +14,10 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         unique = options.unique ? true : false,
         source = options.source ? options.source : 'title',
         separator = options.separator ? String(options.separator) : '-',
-        updatable = ((options.separator) || (options.separator === undefined)) ? true : false;
+        updatable = ((options.updatable) || (options.updatable === undefined)) ? true : false;
 
     schema.pre('save', unique, function (next, done) {
-        if (updatable === false && this[field]) {
+        if (updatable === false && this[slug]) {
             next();
             return;
         }
@@ -42,7 +42,7 @@ module.exports = exports = function sluggablePlugin(schema, options) {
             throw new Error('Source can be an array or a string');
         }
 
-        value = asciiFolding(String(value).trim()).toLowerCase().replace('/^[a-z0-9]/g', separator).trim();
+        value = asciiFolding(String(value).trim()).toLowerCase().replace(/[^a-z0-9]/g, separator).trim();
 
         if (value.length === 0) {
             throw new Error('One of the fields is requried: ' + String(errorFields.join(', ')));
@@ -61,17 +61,21 @@ module.exports = exports = function sluggablePlugin(schema, options) {
 
         function findNewSlug(value) {
             where[slug] = value;
-            this.findOne(where, function (err, data) {
+            self.findOne(where, undefined, function (err, data) {
                 if (err) {
                     throw err;
                 }
+                console.log(data);
                 if (!data) {
                     self[slug] = value;
-                    next();
+                    done();
                     return;
                 }
-                findNewSlug(value + String(separator) + String(++suffix));
+                findNewSlug(String(value) + String(separator) + String(++suffix));
             });
         }
+
+        findNewSlug(value);
+        next();
     });
 };
