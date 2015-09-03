@@ -1,5 +1,9 @@
 var asciiFolding = require('diacritics').remove;
 
+function escapeRegExp(string){
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
 function sanitizeFieldName(val) {
     val = String(val).trim();
     if (val.length === 0) {
@@ -14,7 +18,8 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         unique = options.unique ? true : false,
         source = options.source ? options.source : 'title',
         separator = options.separator ? String(options.separator) : '-',
-        updatable = ((options.updatable) || (options.updatable === undefined)) ? true : false;
+        updatable = ((options.updatable) || (options.updatable === undefined)) ? true : false,
+        asciiFolding = (typeof options.asciiFolding === 'function') ? options.asciiFolding : asciiFolding;
 
     schema.pre('save', unique, function (next, done) {
         if (updatable === false && this[slug]) {
@@ -44,6 +49,12 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         }
 
         value = asciiFolding(String(value).trim()).toLowerCase().replace(/[^a-z0-9]/g, separator).trim();
+        if (String(separator).length > 0) {
+            value = value.replace(new RegExp('[' + escapeRegExp(separator) + ']+', 'g'), separator);
+            value = value.replace(new RegExp('^[' + escapeRegExp(separator) + ']+', 'g'), '');
+            value = value.replace(new RegExp('[' + escapeRegExp(separator) + ']+$', 'g'), '');
+        }
+
 
         if (value.length === 0) {
             throw new Error('One of the fields is requried: ' + String(errorFields.join(', ')));
@@ -69,6 +80,7 @@ module.exports = exports = function sluggablePlugin(schema, options) {
                 if (!data) {
                     self[slug] = search;
                     done();
+                    next();
                     return;
                 }
                 findNewSlug(String(value) + String(separator) + String(++suffix));
@@ -76,6 +88,5 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         }
 
         findNewSlug(value);
-        next();
     });
 };
