@@ -19,7 +19,7 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         source = options.source ? options.source : 'title',
         separator = options.separator ? String(options.separator) : '-',
         updatable = ((options.updatable) || (options.updatable === undefined)) ? true : false,
-        asciiFolding = (typeof options.asciiFolding === 'function') ? options.asciiFolding : asciiFolding;
+        asciiFoldingFunction = (typeof options.asciiFolding === 'function') ? options.asciiFolding : asciiFolding;
 
     schema.pre('save', unique, function (next, done) {
         if (updatable === false && this[slug]) {
@@ -48,7 +48,7 @@ module.exports = exports = function sluggablePlugin(schema, options) {
             throw new Error('Source can be an array or a string');
         }
 
-        value = asciiFolding(String(value).trim()).toLowerCase().replace(/[^a-z0-9]/g, separator).trim();
+        value = asciiFoldingFunction(String(value).trim()).toLowerCase().replace(/[^a-z0-9]/g, separator).trim();
         if (String(separator).length > 0) {
             value = value.replace(new RegExp('[' + escapeRegExp(separator) + ']+', 'g'), separator);
             value = value.replace(new RegExp('^[' + escapeRegExp(separator) + ']+', 'g'), '');
