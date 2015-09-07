@@ -1,6 +1,10 @@
 # mongoose-sluggable
 Sluggable extension for Mongoose
 
+### 0.7.0
+unchecked, 0.7 throw out asci folding and replacement method for characters and use "slug" module from NPM.
+It's awesome module that do both ascii folding and utf-8 symbols translation, one hell of a module for slug.
+
 ### How to use?
 
 After you create mongoose schema, you need to add field that will contain slug. Example:
@@ -23,6 +27,7 @@ var schema = new Schema({
 **Remember!**
 Plugin will *NOT* create field for you. I hate when plugins do magic behind scenes and I write my things in mind that
 nothing should happen without programmer knowledge. Plugin will not work if no slug field is created.
+Also, do **NOT** make slug field required since it's generated right before save so validation will catch it and return error on save on first try.
 
 Then add plugin:
 
@@ -40,7 +45,11 @@ You can add some options if you like:
 | **source**  | Name of fields that will be used to create slug. You can pass string or array of strings? *Default "title"*. |
 | **separator**  | Separator used to replace all non a-z and 0-9 characters. *Default "-"*. |
 | **updatable**  | If set to *"false"*, not empty slug will not be changed by the plugin. *Default "true"*. |
-| **asciiFolding**  | I use module diacritics to do ascii folding. Turning "ó" to "o" or "ą" to "a" etc. You can pass your own, one-parameter *function* as this parameter. |
+| **charmap**  | Set a char map to replace unhandled characters. *Default "true"*. |
+| **multicharmap**  | Set a multi char map to replace unhandled characters. *Default "true"*. |
+
+More about charmap and multicharmap in slug module:
+https://www.npmjs.com/package/slug
 
 **About unique!**
 When using "unique: true", sluggable extension will not throw error or anything when slug exists. It will append separator and number at the end. So "John Rambo" will get you:
@@ -59,12 +68,6 @@ model.findOne({
  ````
 
  Where "field" is name of the field that is used to store slug (parameter from table above).
-
-**Important about separator!**
-When using separator that has multiple chracters and letters since I use regexp to trim slug and remove multiple separators that appear side by side.
-For example "_ Wi - Fi _" with separator "-" should be translated to "--wi---fi--" but when I replace multiple "-" as one I get "-wi-fi-" and when I trim,
-I get what I wanted: "wi-fi". To do that I use regexp /[\-]+/g. "-" is replaced by any separator you choose. So be careful if you use some strange or multiple
-characters.
 
 Final example for fields "name" and "surname" translated to slug called "username":
 
