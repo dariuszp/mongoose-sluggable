@@ -1,8 +1,4 @@
-var asciiFolding = require('diacritics').remove;
-
-function escapeRegExp(string){
-    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
+var generateSlug = require('slug');
 
 function sanitizeFieldName(val) {
     val = String(val).trim();
@@ -19,7 +15,9 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         source = options.source ? options.source : 'title',
         separator = options.separator ? String(options.separator) : '-',
         updatable = ((options.updatable) || (options.updatable === undefined)) ? true : false,
-        asciiFoldingFunction = (typeof options.asciiFolding === 'function') ? options.asciiFolding : asciiFolding;
+        charmap = (options.charmap) ? options.charmap : generateSlug.charmap,
+        multicharmap = (options.multicharmap) ? options.multicharmap : generateSlug.multicharmap,
+        symbols = (options.symbols || options.symbols === undefined) ? true : false;
 
     schema.pre('save', unique, function (next, done) {
         if (updatable === false && this[slug]) {
@@ -48,13 +46,13 @@ module.exports = exports = function sluggablePlugin(schema, options) {
             throw new Error('Source can be an array or a string');
         }
 
-        value = asciiFoldingFunction(String(value).trim()).toLowerCase().replace(/[^a-z0-9]/g, separator).trim();
-        if (String(separator).length > 0) {
-            value = value.replace(new RegExp('[' + escapeRegExp(separator) + ']+', 'g'), separator);
-            value = value.replace(new RegExp('^[' + escapeRegExp(separator) + ']+', 'g'), '');
-            value = value.replace(new RegExp('[' + escapeRegExp(separator) + ']+$', 'g'), '');
-        }
-
+        value = generateSlug(value, {
+            replacement: separator,
+            lower: true,
+            charmap: charmap,
+            multicharmap: multicharmap,
+            symbols: symbols
+        });
 
         if (value.length === 0) {
             throw new Error('One of the fields is requried: ' + String(errorFields.join(', ')));
