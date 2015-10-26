@@ -77,8 +77,8 @@ module.exports = exports = function sluggablePlugin(schema, options) {
                 }
                 if (!data) {
                     self[slug] = search;
-                    done();
                     next();
+                    done();
                     return;
                 }
                 findNewSlug(String(value) + String(separator) + String(++suffix));
