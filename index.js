@@ -1,4 +1,5 @@
 var generateSlug = require('slug');
+var lodash = require('lodash');
 
 function sanitizeFieldName(val) {
     val = String(val).trim();
@@ -32,14 +33,14 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         if (typeof source === 'string') {
             field = sanitizeFieldName(source);
             errorFields.push(field);
-            value = String(this[field] || '').trim();
+            value = String(_.get(this, field) || '').trim();
         } else if (source instanceof Array) {
             var array = [],
                 i;
             for (i = 0; i < source.length; i++) {
                 field = sanitizeFieldName(source[i]);
                 errorFields.push(field);
-                array.push(String(this[field] || '').trim());
+                array.push(String(_.get(this, field) || '').trim());
             }
             value = array.join(separator);
         } else {
