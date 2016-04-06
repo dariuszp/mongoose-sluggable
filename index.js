@@ -1,5 +1,5 @@
 var generateSlug = require('slug');
-var lodash = require('lodash');
+var _ = require('lodash');
 
 function sanitizeFieldName(val) {
     val = String(val).trim();
