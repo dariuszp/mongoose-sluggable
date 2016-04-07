@@ -1,6 +1,6 @@
 {
   "name": "mongoose-sluggable",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Mongoose slug plugin",
   "main": "index.js",
   "scripts": {
