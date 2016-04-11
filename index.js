@@ -1,6 +1,6 @@
 var generateSlug = require('slug');
 var _ = require('lodash');
-vat moment = require('moment');
+var moment = require('moment');
 
 function sanitizeFieldName(val) {
     val = String(val).trim();
