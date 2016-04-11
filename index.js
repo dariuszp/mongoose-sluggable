@@ -1,5 +1,6 @@
 var generateSlug = require('slug');
 var _ = require('lodash');
+vat moment = require('moment');
 
 function sanitizeFieldName(val) {
     val = String(val).trim();
@@ -18,7 +19,8 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         updatable = ((options.updatable) || (options.updatable === undefined)) ? true : false,
         charmap = (options.charmap) ? options.charmap : generateSlug.charmap,
         multicharmap = (options.multicharmap) ? options.multicharmap : generateSlug.multicharmap,
-        symbols = (options.symbols || options.symbols === undefined) ? true : false;
+        symbols = (options.symbols || options.symbols === undefined) ? true : false,
+        dateFormat = options.dateFormat ? options.dateFormat : 'DD MM YYYY';
 
     schema.pre('save', unique, function (next, done) {
         if (updatable === false && this[slug]) {
@@ -34,13 +36,18 @@ module.exports = exports = function sluggablePlugin(schema, options) {
             field = sanitizeFieldName(source);
             errorFields.push(field);
             value = String(_.get(this, field) || '').trim();
+            if (_.isDate(value)) {
+              value = moment(value, dateFormat);
+            }
         } else if (source instanceof Array) {
             var array = [],
-                i;
+                i,
+                tempVal;
             for (i = 0; i < source.length; i++) {
                 field = sanitizeFieldName(source[i]);
                 errorFields.push(field);
-                array.push(String(_.get(this, field) || '').trim());
+                tempVal = String(_.get(this, field) || '').trim();
+                array.push(_.isDate(tempVal) ? moment(tempVal, dateFormat) || tempVal);
             }
             value = array.join(separator);
         } else {
