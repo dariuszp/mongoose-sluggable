@@ -47,7 +47,7 @@ module.exports = exports = function sluggablePlugin(schema, options) {
                 field = sanitizeFieldName(source[i]);
                 errorFields.push(field);
                 tempVal = String(_.get(this, field) || '').trim();
-                array.push(_.isDate(tempVal) ? moment(tempVal, dateFormat) || tempVal);
+                array.push(_.isDate(tempVal) ? moment(tempVal, dateFormat) : tempVal);
             }
             value = array.join(separator);
         } else {
