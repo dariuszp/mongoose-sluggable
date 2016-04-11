@@ -29,30 +29,25 @@ module.exports = exports = function sluggablePlugin(schema, options) {
             return;
         }
 
-        var value = '',
-        field = '',
-        errorFields = [];
-        if (typeof source === 'string') {
-            field = sanitizeFieldName(source);
-            errorFields.push(field);
-            value = String(_.get(this, field) || '').trim();
-            if (_.isDate(value)) {
-              value = moment(value, dateFormat);
-            }
-        } else if (source instanceof Array) {
-            var array = [],
-                i,
-                tempVal;
-            for (i = 0; i < source.length; i++) {
-                field = sanitizeFieldName(source[i]);
-                errorFields.push(field);
-                tempVal = String(_.get(this, field) || '').trim();
-                array.push(_.isDate(tempVal) ? moment(tempVal, dateFormat) : tempVal);
-            }
-            value = array.join(separator);
-        } else {
-            throw new Error('Source can be an array or a string');
+        var value = '';
+        var field = '';
+        var errorFields = [];
+        var format = null;
+
+        if (!Array.isArray(source)) {
+          source = [source];
         }
+
+        var array = [];
+        var temp;
+        for (var i = 0; i < source.length; i++) {
+            field = sanitizeFieldName(_.isObject(source[i]) ? source[i].field : source[i]);
+            format = _.isObject(source[i]) ? source[i].format : null;
+            errorFields.push(field);
+            temp = String(_.get(this, field) || '').trim();
+            array.push(format ? moment(new Date(temp)).format(format) : temp);
+        }
+        value = array.join(separator);
 
         value = generateSlug(value, {
             replacement: separator,
