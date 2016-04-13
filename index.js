@@ -42,6 +42,8 @@ module.exports = exports = function sluggablePlugin(schema, options) {
                 array.push(String(this[field] || '').trim());
             }
             value = array.join(separator);
+        } else if(Object.prototype.toString.call(source) == '[object Function]') {
+            value = source(this, separator);
         } else {
             throw new Error('Source can be an array or a string');
         }

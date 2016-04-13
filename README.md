@@ -42,7 +42,7 @@ You can add some options if you like:
 | ------------- | ------------- |
 | **field**  | Name of field that will be used to store slug. *Default "slug"* |
 | **unique**  | Should slug be unique for this collection? *Default "false"*. |
-| **source**  | Name of fields that will be used to create slug. You can pass string or array of strings? *Default "title"*. |
+| **source**  | Name of fields that will be used to create slug. You can pass string, an array of strings or a function? *Default "title"*. |
 | **separator**  | Separator used to replace all non a-z and 0-9 characters. *Default "-"*. |
 | **updatable**  | If set to *"false"*, not empty slug will not be changed by the plugin. *Default "true"*. |
 | **charmap**  | Set a char map to replace unhandled characters. *Default "true"*. |
@@ -75,6 +75,25 @@ Final example for fields "name" and "surname" translated to slug called "usernam
 schema.plugin(sluggable, {
     "field": "username",
     "source": ["name", "surname"],
+    "unique": true,
+    "updatable": false
+});
+```
+
+Example for source as function:  
+
+```
+var slugSource = function(doc, seperator){
+    if(doc.role = 'COMPANY') {
+        return String(doc.title || '').trim();
+    }
+    else {
+        return String(doc.firstName + seperator + doc.lastName || '').trim();
+    }
+};
+schema.plugin(sluggable, {
+    "field": "username",
+    "source": slugSource,
     "unique": true,
     "updatable": false
 });
