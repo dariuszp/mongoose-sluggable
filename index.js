@@ -57,7 +57,7 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         });
 
         if (value.length === 0) {
-            throw new Error('One of the fields is requried: ' + String(errorFields.join(', ')));
+            throw new Error('One of the fields is required: ' + String(errorFields.join(', ')));
         }
 
         if (!unique) {
