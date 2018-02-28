@@ -100,3 +100,17 @@ schema.plugin(sluggable, {
 ```
 
 Now document with name "Dariusz" and surname "Półtorak" will be translated to "dariusz-poltorak". And another document like that will receive "dariusz-poltorak-2".
+
+Compound example:
+
+```
+schema.index({ slug: 1, otherField: 1 }, { unique: true });
+
+schema.plugin(sluggable, {
+    "field": "username",
+    "source": slugSource,
+    "unique": true,
+    "uniqueCompound": ["otherField"]
+    "updatable": false
+});
+```
