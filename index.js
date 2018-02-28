@@ -17,7 +17,8 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         updatable = ((options.updatable) || (options.updatable === undefined)) ? true : false,
         charmap = (options.charmap) ? options.charmap : generateSlug.charmap,
         multicharmap = (options.multicharmap) ? options.multicharmap : generateSlug.multicharmap,
-        symbols = (options.symbols || options.symbols === undefined) ? true : false;
+        symbols = (options.symbols || options.symbols === undefined) ? true : false,
+        uniqueCompound = (options.uniqueCompound) ? options.uniqueCompound : [];
 
     schema.pre('save', unique, function (next, done) {
         if (updatable === false && this[slug]) {
@@ -73,6 +74,13 @@ module.exports = exports = function sluggablePlugin(schema, options) {
         function findNewSlug(search) {
             where[slug] = search;
             where['_id'] = { '$ne': self._id };
+            if ( uniqueCompound.length > 0 ) {
+                var i = 0,
+                    l = uniqueCompound.length;
+                for (; i < l; i++) {
+                  where[ uniqueCompound[i] ] = { '$ne': self[ uniqueCompound[i] ] };
+                }
+            }
             self.constructor.findOne(where, function (err, data) {
                 if (err) {
                     throw err;
